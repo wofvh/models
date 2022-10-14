@@ -12,8 +12,6 @@
 #     print("쥐피유돈다")
 # else:
 #     print("쥐피유 안돈다 ")
-
-
 import numpy as np
 import torch
 import torch.nn as nn

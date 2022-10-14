@@ -1,0 +1,7 @@
+data/*
+jn/*
+*.pyc
+*.ipynb
+*.log
+model/*
+out/*

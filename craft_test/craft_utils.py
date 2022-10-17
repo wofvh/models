@@ -9,25 +9,18 @@ import math
 """ auxilary functions """
 # unwarp corodinates 
 
-def unwarpCoord(M, pt):#pt = [x, y] # M = cv2.getPerspectiveTransform(src, dst) 
-    out = np.matmul(M, (pt[0], pt[1], 1)) # out = np.matmul(M, np.array([pt[0], pt[1], 1]))
-    return np.array([out[0]/out[2], out[1]/out[2]])
-
 def warpCoord(Minv, pt):#pt = [x, y] # Minv = cv2.getPerspectiveTransform(dst, src) 
     out = np.matmul(Minv, (pt[0], pt[1], 1)) # out = np.matmul(Minv, np.array([pt[0], pt[1], 1]))
     return np.array([out[0]/out[2], out[1]/out[2]])
 """ end of auxilary functions """
 
-model = unwarpCoord(1,1)
-print(model)
-
-'''
 def getDetBoxes_core(textmap, linkmap, text_threshold, link_threshold, low_text):
     # prepare data
     linkmap = linkmap.copy()
     textmap = textmap.copy()
     img_h, img_w = textmap.shape
 
+#라벨링 !
     """ labeling method """
     ret, text_score = cv2.threshold(textmap, low_text, 1, 0)
     ret, link_score = cv2.threshold(linkmap, link_threshold, 1, 0)

@@ -8,14 +8,11 @@ import sys
 import os
 import time
 import argparse
-
 import torch
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
 from torch.autograd import Variable
-
 from PIL import Image
-
 import cv2
 from skimage import io
 import numpy as np
@@ -24,10 +21,10 @@ import imgproc
 import file_utils
 import json
 import zipfile
-
 from craft import CRAFT
-
 from collections import OrderedDict
+
+
 def copyStateDict(state_dict):
     if list(state_dict.keys())[0].startswith("module"):
         start_idx = 1

@@ -8,7 +8,7 @@ import imgproc
 def get_files(img_dir):
     imgs, masks, xmls = list_files(img_dir)
     return imgs, masks, xmls
-ddd
+
 def list_files(in_path):
     img_files = []
     mask_files = []
@@ -73,4 +73,3 @@ def saveResult(img_file, img, boxes, dirname='./result/', verticals=None, texts=
 
         # Save result image
         cv2.imwrite(res_img_file, img)
-

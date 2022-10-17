@@ -1,0 +1,1 @@
+from keras.datasets import mnist, fashion_mnist , cifar10 , cifar100

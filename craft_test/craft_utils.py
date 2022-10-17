@@ -4,6 +4,7 @@ MIT License
 """
 
 # -*- coding: utf-8 -*-
+from pyexpat import model
 import numpy as np
 import cv2
 import math
@@ -28,7 +29,8 @@ def getDetBoxes_core(textmap, linkmap, text_threshold, link_threshold, low_text)
 
     text_score_comb = np.clip(text_score + link_score, 0, 1)
     nLabels, labels, stats, centroids = cv2.connectedComponentsWithStats(text_score_comb.astype(np.uint8), connectivity=4)
-
+# cv2.connectedComponentsWithStats 객채 정보를 함께 반환하는 레이블링 함수
+#https://medium.com/@msmapark2/character-region-awareness-for-text-detection-craft-paper-%EB%B6%84%EC%84%9D-da987b32609c
     det = []
     mapper = []
     for k in range(1,nLabels):
@@ -37,23 +39,23 @@ def getDetBoxes_core(textmap, linkmap, text_threshold, link_threshold, low_text)
         if size < 10: continue
 
         # thresholding
-        if np.max(textmap[labels==k]) < text_threshold: continue
+        if np.max(textmap[labels==k]) < text_threshold: continue # text_score가 text_threshold보다 작으면 continue
 
         # make segmentation map
-        segmap = np.zeros(textmap.shape, dtype=np.uint8)
+        segmap = np.zeros(textmap.shape, dtype=np.uint8) # textmap과 같은 크기의 0으로 채워진 배열 생성
         segmap[labels==k] = 255
         segmap[np.logical_and(link_score==1, text_score==0)] = 0   # remove link area
         x, y = stats[k, cv2.CC_STAT_LEFT], stats[k, cv2.CC_STAT_TOP]
         w, h = stats[k, cv2.CC_STAT_WIDTH], stats[k, cv2.CC_STAT_HEIGHT]
-        niter = int(math.sqrt(size * min(w, h) / (w * h)) * 2)
+        niter = int(math.sqrt(size * min(w, h) / (w * h)) * 2) #숫자가 작을수록 niter가 커짐 -> 더 많은 반복을 통해 더 많은 픽셀을 제거
         sx, ex, sy, ey = x - niter, x + w + niter + 1, y - niter, y + h + niter + 1
         # boundary check
         if sx < 0 : sx = 0
         if sy < 0 : sy = 0
         if ex >= img_w: ex = img_w
         if ey >= img_h: ey = img_h
-        kernel = cv2.getStructuringElement(cv2.MORPH_RECT,(1 + niter, 1 + niter))
-        segmap[sy:ey, sx:ex] = cv2.dilate(segmap[sy:ey, sx:ex], kernel)
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT,(1 + niter, 1 + niter))# niter 크기의 사각형 커널 생성 MORPH_RECT 직사각형
+        segmap[sy:ey, sx:ex] = cv2.dilate(segmap[sy:ey, sx:ex], kernel) #dilate: 커널을 이용해 이미지 팽창(선을 더 두껍게)
 
         # make box
         np_contours = np.roll(np.array(np.where(segmap!=0)),1,axis=0).transpose().reshape(-1,2)
@@ -74,9 +76,11 @@ def getDetBoxes_core(textmap, linkmap, text_threshold, link_threshold, low_text)
         box = np.array(box)
 
         det.append(box)
+
         mapper.append(k)
 
     return det, labels, mapper
+
 
 def getPoly_core(boxes, labels, mapper, linkmap):
     # configs

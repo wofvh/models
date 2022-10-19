@@ -2,7 +2,6 @@
 Copyright (c) 2019-present NAVER Corp.
 MIT License
 """
-
 # -*- coding: utf-8 -*-
 import sys
 import os
@@ -166,3 +165,4 @@ if __name__ == '__main__':
         file_utils.saveResult(image_path, image[:,:,::-1], polys, dirname=result_folder)
 
     print("elapsed time : {}s".format(time.time() - t))
+print("elapsed time : {}s".format(time.time() - t))

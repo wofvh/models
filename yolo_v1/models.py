@@ -6,23 +6,24 @@ architecture_config = [
     "M",  # maxpooling
     (3, 192, 1, 1), # kernel_size, filters, stride, padding
     "M",
-    (1, 128, 1, 0),
+    (1, 128, 1, 0), # kernel_size, filters, stride, padding
     (3, 256, 1, 1),
     (1, 256, 1, 0),
     (3, 512, 1, 1),
     "M",
-    [(1, 256, 1, 0), (3, 512, 1, 1), 4],
+    [(1, 256, 1, 0), (3, 512, 1, 1), 4], #0은 리스트의 인덱스, 1은 값. 사실 이 리스트는 for문에 사용됨 # 4는 도는 횟수 
     (1, 512, 1, 0),
     (3, 1024, 1, 1),
     "M",
-    [(1, 512, 1, 0), (3, 1024, 1, 1), 2],
-    (3, 1024, 1, 1),
+    [(1, 512, 1, 0), (3, 1024, 1, 1), 2], #yolov2: 2 -> 1 #5 #0은 리스트의 인덱스, 1은 값. 사실 이 리스트는 for문에 사용됨 # 2는 도는 횟수
+    (3, 1024, 1, 1), # when stride = 1, the kernel size is 3x3 spatial size become 32x32, 3x3x1024 input to 3x3x1024 output
     (3, 1024, 2, 1),
+    (3, 1024, 1, 1), # when stride = 1, the kernel size is 3x3 spatial size become 7x7, 3x3x1024 input to 3x3x1024 output
     (3, 1024, 1, 1),
-    (3, 1024, 1, 1),
+
 ]
 
-
+   
 class CNNBlock(nn.Module): #클래스 정의 
     def __init__(self, in_channels, out_channels, **kwargs):
         super(CNNBlock, self).__init__()
@@ -112,3 +113,5 @@ def test(S=7, B=2, C=20): #테스트 함수
     x = torch.randn((2, 3, 448, 448)) # 2 = 배치사이즈 # 3 = 채널수 # 448 = 이미지크기
     print(model(x).shape)
 test()
+
+#2 = 배치사이즈 #1470 = 모델메모리사이즈 아웃풋

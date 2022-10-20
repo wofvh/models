@@ -101,9 +101,4 @@ class YoloLoss(nn.Module):
             + self.lambda_noobj * no_object_loss  # forth row
             + class_loss  # fifth row
         )
-
         return loss
-
-modeld = YoloLoss()
-
-print(modeld)

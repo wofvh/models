@@ -1,5 +1,3 @@
-from calendar import EPOCH
-from tkinter import Y
 from unittest import result
 from sklearn.datasets import load_breast_cancer
 import torch

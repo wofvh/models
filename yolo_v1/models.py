@@ -9,11 +9,11 @@ architecture_config = [
     (1, 128, 1, 0), # kernel_size, filters, stride, padding
     (3, 256, 1, 1),
     (1, 256, 1, 0),
-    (3, 512, 1, 1),
+    (3, 512, 1, 1), # kernel_size, filters, stride, padding 
     "M",
     [(1, 256, 1, 0), (3, 512, 1, 1), 4], #0은 리스트의 인덱스, 1은 값. 사실 이 리스트는 for문에 사용됨 # 4는 도는 횟수 
     (1, 512, 1, 0),
-    (3, 1024, 1, 1),
+    (3, 1024, 1, 1), # kernel_size, filters, stride, padding
     "M",
     [(1, 512, 1, 0), (3, 1024, 1, 1), 2], #yolov2: 2 -> 1 #5 #0은 리스트의 인덱스, 1은 값. 사실 이 리스트는 for문에 사용됨 # 2는 도는 횟수
     (3, 1024, 1, 1), # when stride = 1, the kernel size is 3x3 spatial size become 32x32, 3x3x1024 input to 3x3x1024 output

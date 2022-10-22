@@ -2,7 +2,6 @@
 Main file for training Yolo model on Pascal VOC dataset
 
 """
-
 import torch
 import torchvision.transforms as transforms
 import torch.optim as optim
@@ -36,8 +35,8 @@ NUM_WORKERS = 2
 PIN_MEMORY = True
 LOAD_MODEL = False
 LOAD_MODEL_FILE = "overfit.pth.tar"
-IMG_DIR = "data/images"
-LABEL_DIR = "data/labels"
+IMG_DIR = "./data/images"
+LABEL_DIR = "./data/labels"
 
 
 class Compose(object):
@@ -73,7 +72,7 @@ def train_fn(train_loader, model, optimizer, loss_fn):
     print(f"Mean loss was {sum(mean_loss)/len(mean_loss)}") #평균 손실을 계산하고, 학습 데이터셋에 대한 평균 평균 정밀도를 계산합니다.
 
 
-def main():
+def main(): 
     model = Yolov1(split_size=7, num_boxes=2, num_classes=20).to(DEVICE)
     optimizer = optim.Adam(
         model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY
@@ -84,14 +83,14 @@ def main():
         load_checkpoint(torch.load(LOAD_MODEL_FILE), model, optimizer)
 
     train_dataset = VOCDataset(
-        "data/100examples.csv",
+        "./data/100examples.csv",
         transform=transform,
         img_dir=IMG_DIR,
         label_dir=LABEL_DIR,
     )
 
     test_dataset = VOCDataset(
-        "data/test.csv", transform=transform, img_dir=IMG_DIR, label_dir=LABEL_DIR,
+        "./data/test.csv", transform=transform, img_dir=IMG_DIR, label_dir=LABEL_DIR,
     )
 
     train_loader = DataLoader(

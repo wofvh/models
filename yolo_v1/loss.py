@@ -1,6 +1,4 @@
  #yolo  loss function
-
-from msilib.schema import Class
 import torch
 from torch import nn
 from utils import intersection_over_union # iou를 구하는 함수를 가져온다.

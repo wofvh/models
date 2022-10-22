@@ -232,10 +232,10 @@ def getPoly_core(boxes, labels, mapper, linkmap): #
 def getDetBoxes(textmap, linkmap, text_threshold, link_threshold, low_text, poly=False):
     boxes, labels, mapper = getDetBoxes_core(textmap, linkmap, text_threshold, link_threshold, low_text)
 
-    if poly:
-        polys = getPoly_core(boxes, labels, mapper, linkmap)
+    if poly: #폴리곤으로 변환
+        polys = getPoly_core(boxes, labels, mapper, linkmap) #휘어진 글자를 폴리곤으로 변환
     else:
-        polys = [None] * len(boxes)
+        polys = [None] * len(boxes) # 폴리곤이 아니면 None
  
     return boxes, polys
 

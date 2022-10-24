@@ -1,7 +1,5 @@
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sqlalchemy import null
 from tensorflow.python.keras.models import Sequential,load_model
 from tensorflow.python.keras.layers import Dense,Dropout,Conv2D,Flatten,LSTM,Conv1D
 from sklearn.model_selection import train_test_split
@@ -9,8 +7,6 @@ from tensorflow.python.keras.callbacks import EarlyStopping,ModelCheckpoint
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import r2_score, mean_squared_error
 from tqdm import tqdm_notebook
-from sklearn.svm import LinearSVC 
-from sklearn.svm import LinearSVR 
 import matplotlib
 from sklearn.model_selection import RandomizedSearchCV
 

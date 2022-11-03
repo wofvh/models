@@ -114,8 +114,6 @@ def test_net(net, image, text_threshold, link_threshold, low_text, cuda, poly, r
 
     return boxes, polys, ret_score_text
 
-
-
 if __name__ == '__main__':
     # load net
     net = CRAFT()     # initialize 

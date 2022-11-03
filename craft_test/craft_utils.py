@@ -169,7 +169,7 @@ def getPoly_core(boxes, labels, mapper, linkmap): #
         if None in pp or seg_w < np.max(seg_height) * 0.25:
             polys.append(None); continue
 
-        # calc median maximum of pivot points
+        #calc median maximum of pivot points
         half_char_h = np.median(seg_height) * expand_ratio / 2
 
         # calc gradiant and apply to make horizontal pivots
@@ -184,7 +184,7 @@ def getPoly_core(boxes, labels, mapper, linkmap): #
             c, s = half_char_h * math.cos(rad), half_char_h * math.sin(rad)
             new_pp.append([x - s, cy - c, x + s, cy + c])
 
-        # get edge points to cover character heatmaps
+        #get edge points to cover character heatmaps
         isSppFound, isEppFound = False, False
         grad_s = (pp[1][1] - pp[0][1]) / (pp[1][0] - pp[0][0]) + (pp[2][1] - pp[1][1]) / (pp[2][0] - pp[1][0])
         grad_e = (pp[-2][1] - pp[-1][1]) / (pp[-2][0] - pp[-1][0]) + (pp[-3][1] - pp[-2][1]) / (pp[-3][0] - pp[-2][0])

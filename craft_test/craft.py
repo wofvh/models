@@ -23,10 +23,9 @@ class double_conv(nn.Module):
         )
 
     def forward(self, x):
+
         x = self.conv(x)
         return x
-
-
 class CRAFT(nn.Module):
     def __init__(self, pretrained=False, freeze=False):
         super(CRAFT, self).__init__()
@@ -55,6 +54,7 @@ class CRAFT(nn.Module):
         init_weights(self.upconv4.modules())
         init_weights(self.conv_cls.modules())
         
+
     def forward(self, x):
         """ Base network """
         sources = self.basenet(x)
@@ -77,7 +77,11 @@ class CRAFT(nn.Module):
 
         y = self.conv_cls(feature)
 
-        return y.permute(0,2,3,1), feature
+        return y
+        
+        
+        
+        .permute(0,2,3,1), feature
 
 if __name__ == '__main__':
     model = CRAFT(pretrained=True).cuda()

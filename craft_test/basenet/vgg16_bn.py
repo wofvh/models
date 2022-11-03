@@ -40,7 +40,7 @@ class vgg16_bn(torch.nn.Module):
         # fc6, fc7 without atrous conv
         self.slice5 = torch.nn.Sequential(
                 nn.MaxPool2d(kernel_size=3, stride=1, padding=1),
-                nn.Conv2d(512, 1024, kernel_size=3, padding=6, dilation=6),
+                nn.Conv2d(512, 1024, kernel_size=3, padding=6, dilation=6), #다섯번쨰 레이어 dilation=6는 atrous conv
                 nn.Conv2d(1024, 1024, kernel_size=1)
         )
 

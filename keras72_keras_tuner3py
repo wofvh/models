@@ -1,0 +1,125 @@
+# 일반적으로 라이브러리의 버전이 ex)1.xx 라면 배포가 된 버전 상용화된 버전이다.
+# 버전이 0.xx 라면 아직 프로토 타입 및 베타테스트다. 이건 개발자들의 암묵적 합의다.
+import keras_tuner as kt   # keras downloader keras-tuner  라고 메일보냄
+import tensorflow as tf
+from keras.datasets import mnist
+from keras.models import Sequential
+from keras.layers import Dense,Dropout,Flatten
+# from keras.optimizers.optimizer_v2 import adam
+from keras.optimizers import Adam
+
+(x_train,y_train),(x_test,y_test) = mnist.load_data()
+x_train,x_test = x_train/255. ,x_test/255. #255는 0~255까지의 값을 가지고 있기 때문에 255로 나눠준다.
+
+def get_model(hp):
+    # Dense의 노드 
+    hp_unit1 = hp.Int('units1',min_value = 16,max_value=512,step=16) #덴스의 노드를 hp로 정의 Int 케라이튜너에서 정의한 함수 
+    hp_unit2 = hp.Int('units2',min_value = 16,max_value=512,step=16)
+    hp_unit3 = hp.Int('units3',min_value = 16,max_value=512,step=16) # 16 32 48 64 80 96 112 128 144 160 176 192 208 224 240 256 272 288 304 320 336 352 368 384 400 416 432 448 464 480 496 512
+    hp_unit4 = hp.Int('units4',min_value = 16,max_value=512,step=16) 
+    
+    # activation 
+    hp_act1 = hp.Choice('activation1',values=['relu','selu','elu']) # 케라스 튜너에서 정의한 함수 choice   
+    hp_act2 = hp.Choice('activation2',values=['relu','selu','elu']) # 제일 잘나오는 relu를 기본값으로 두고 selu,elu를 비교해보자
+    hp_act3 = hp.Choice('activation3',values=['relu','selu','elu'])
+    hp_act4 = hp.Choice('activation4',values=['relu','selu','elu'])
+    
+    # dropout 비율 
+    hp_drop1 = hp.Choice('dropout1',values =[0.0, 0.2, 0.3, 0.4, 0.5]) #드롭아웃은 0.2 0.3 0.4 0.5 중에 하나를 선택하게 한다.
+    hp_drop2 = hp.Choice('dropout2',values =[0.0, 0.2, 0.3, 0.4, 0.5])
+    hp_drop3 = hp.Choice('dropout3',values =[0.0, 0.2, 0.3, 0.4, 0.5])
+    hp_drop4 = hp.Choice('dropout4',values =[0.0, 0.2, 0.3, 0.4, 0.5])
+    
+    batch_size1 = hp.Int('batch_size1', min_value=32, max_value=1024, step=32)
+    
+    # lr의 수치 
+    hp_lr = hp.Choice('learning_rate', values = [1e-2,5e-3,1e-3,5e-4,1e-4]) # 1e-2 5e-3 1e-3 5e-4 1e-4 중에 하나를 선택하게 한다.
+    
+    model = Sequential()
+    model.add(Flatten(input_shape=(28,28))) #바로 플렛튼 하는이유 : 3차원을 2차원으로 바꿔줌 #2차원으로 만드는 이유는 클레스 값만 뽑아내기 위해서
+    model.add(Dense(hp_unit1, activation=hp_act1)) # 노드의 수와 활성화 함수를 정해줌  
+    model.add(Dropout(hp_drop1))
+    
+    model.add(Dense(hp_unit2, activation=hp_act2))
+    model.add(Dropout(hp_drop2))
+    
+    model.add(Dense(hp_unit3, activation=hp_act3))
+    model.add(Dropout(hp_drop3))
+    
+    model.add(Dense(hp_unit4, activation=hp_act4))
+    model.add(Dropout(hp_drop4))
+
+    model.add(Dense(10, activation='softmax')) 
+
+    model.compile(optimizer=Adam(learning_rate=hp_lr),
+                  loss='sparse_categorical_crossentropy', # y값이 원핫인코딩이 아니라 0~9까지의 숫자로 되어있기 때문에 sparse_categorical_crossentropy를 사용
+                  metrics=['acc'])  #원핫이면 categorical_crossentropy 사용
+            
+    return model
+
+kerastuner = kt.Hyperband(get_model,
+                          directory = 'my_dir',   # 사용된 parameter 저장할 폴더
+                          objective = 'val_acc', # 최적화할 하이퍼모델
+                          max_epochs = 6,    # 각 모델별 학습 회수
+                          project_name = 'kerastuner-mnist2')  # 사용된 parameter 저장할 폴더
+
+kerastuner.search(x_train,y_train,
+                  validation_data=(x_test,y_test),
+                  epochs=5 ) # fit 대신 search를 사용한다.
+
+best_hps = kerastuner.get_best_hyperparameters(num_trials=2)[0] # get_best_hyperparameters #num_trials=2 : 2개의 모델을 만들겠다. # [0] : 0번째 모델을 가져오겠다.
+
+print('best parameter - units1 : ',best_hps.get('units1'))
+print('best parameter - units2 : ',best_hps.get('units2'))
+print('best parameter - units3 : ',best_hps.get('units3'))
+print('best parameter - units4 : ',best_hps.get('units4'))
+
+print('best parameter - dropout1 : ',best_hps.get('dropout1'))
+print('best parameter - dropout2 : ',best_hps.get('dropout2'))
+print('best parameter - dropout3 : ',best_hps.get('dropout3'))
+print('best parameter - dropout4 : ',best_hps.get('dropout4'))
+
+print('best parameter - activation1 : ',best_hps.get('activation1'))
+print('best parameter - activation2 : ',best_hps.get('activation2'))
+print('best parameter - activation3 : ',best_hps.get('activation3'))
+print('best parameter - activation4 : ',best_hps.get('activation4'))
+
+print('best parameter - learning_rate : ',best_hps.get('learning_rate'))
+print('best parameter - batch_size : ',best_hps.get('batch_size'))
+
+from keras.callbacks import EarlyStopping , ReduceLROnPlateau
+
+es = EarlyStopping(monitor='val_loss',patience=5,mode='min', verbose=1)
+reduce_lr = ReduceLROnPlateau(monitor='val_loss',patience=5, factor=0.5, verbose=1, mode='auto') #factor한 번에 훈련할 모델 수 결정 변수 
+
+model = kerastuner.hypermodel.build(best_hps) #  잘 나온 파라미터를 build
+  
+history = model.fit(x_train,y_train,
+          epochs=30, validation_split=0.2 , verbose=1, batch_size=best_hps.get('batch_size1'),)
+
+
+def fit(self, hp, model, *args, **kwargs):
+        return model.fit(
+            *args,
+            batch_size=hp.Choice("batch_size", [16, 32, 64, 128, 256, 512, 1024]),
+            **kwargs,)
+
+
+loss = accuracy = model.evaluate(x_test,y_test)
+
+print('loss : ',loss)
+print('accuracy : ',accuracy)
+
+y_predict = model.predict(x_test)
+
+from sklearn.metrics import accuracy_score
+acc = accuracy_score(y_test,y_predict.argmax(axis=1)) # y_predict.argmax(axis=1) : y_predict의 최대값의 인덱스를 반환
+print('acc : ',acc)
+
+
+
+
+# loss :  [0.14752668142318726, 0.9778000116348267]
+# accuracy :  [0.14752668142318726, 0.9778000116348267]
+# 313/313 [==============================] - 0s 1ms/step
+# acc :  0.9778

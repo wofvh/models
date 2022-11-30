@@ -1,5 +1,8 @@
 #BERT 
-
+import urllib.request
+from konlpy.tag import Okt
+from tqdm import tqdm
+from keras.preprocessing.text import Tokenizer
 import os 
 import re
 import json
@@ -29,8 +32,8 @@ MAX_LEN = 39
 from transformers import BertTokenizer, TFBertModel
 import urllib.request
 #한글 데이터
-train_file = urllib.request.urlretrieve("https://raw.githubusercontent.com/e9t/nsmc/master/ratings_train.txt", filename="ratings_train.txt")
-test_file = urllib.request.urlopen("https://raw.githubusercontent.com/e9t/nsmc/master/ratings_test.txt")
+train_file = urllib.request.urlopen("https://raw.githubusercontent.com/e9t/nsmc/master/ratings_train.txt") #urlopen : url을 열어주는 함수
+test_file = urllib.request.urlopen("https://raw.githubusercontent.com/e9t/nsmc/master/ratings_test.txt")#
 
 train_data = pd.read_table(train_file)
 test_data = pd.read_table(test_file) #read_table은 deprecated 되었으므로 read_csv로 대체
@@ -44,7 +47,7 @@ print(test_data.head())
 
 
 # def Bert_Tokenizer(sentence, MAX_LEN):
-#     encoded_dict = tokenize.encode_plus(
+#     encoded_dict = Tokenizer.encode_plus(
 #                         sentence,  # Sentence to encode.           
 #                         add_special_tokens = True, # Add '[CLS]' and '[SEP]'
 #                         max_length = MAX_LEN,           # Pad & truncate all sentences.

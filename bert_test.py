@@ -31,9 +31,16 @@ MAX_LEN = 39
 
 from transformers import BertTokenizer, TFBertModel
 import urllib.request
+from urllib.parse import urlparse
+import os
+import requests
 #한글 데이터
-train_file = urllib.request.urlopen("https://raw.githubusercontent.com/e9t/nsmc/master/ratings_train.txt") #urlopen : url을 열어주는 함수
-test_file = urllib.request.urlopen("https://raw.githubusercontent.com/e9t/nsmc/master/ratings_test.txt")#
+url_test = 'https://raw.githubusercontent.com/e9t/nsmc/master/ratings_test.txt'
+url_train ='https://raw.githubusercontent.com/e9t/nsmc/master/ratings_train.txt'
+
+#한글 깨짐 방지
+train_file = urllib.request.urlopen(url_test) #urlopen : url을 열어주는 함수
+test_file = urllib.request.urlopen(url_train)#
 
 train_data = pd.read_table(train_file)
 test_data = pd.read_table(test_file) #read_table은 deprecated 되었으므로 read_csv로 대체
@@ -80,3 +87,4 @@ print(test_data.head())
 #         print(train_sentence)
 #         pass
 
+ 

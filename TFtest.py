@@ -103,4 +103,4 @@ print(gpus)
 if(gpus):
     print("쥐피유돈다")
 else:
-    print("쥐피유 안도아")
+    print("쥐피유 안돌아")

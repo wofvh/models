@@ -4,7 +4,6 @@ import pickle
 from sklearn.preprocessing import LabelEncoder
 import pandas as pd
 
-
 # Json 파일들 상위 디렉토리
 input_dir = 'C:\\bae' 
 
@@ -56,7 +55,7 @@ for i in json_name_list:
     for n in range(len(result)):
         result[n] = result[n].strip()
 
-    #       #txt 파일 새로만든 폴더로 저장
+    #       #txt 파일 새로만든 폴더에 저장
     # with open('C:\\newone/' + output_file_name.split('/')[-1], 'w+') as lf: #새로운 폴더에 txt 파일로 저장
     #     lf.write('\n'.join(result))
 
